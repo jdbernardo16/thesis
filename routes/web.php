@@ -36,6 +36,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/stages/{stage}/publish', [\App\Http\Controllers\Admin\StageController::class, 'publish']);
     Route::post('/admin/stories', [\App\Http\Controllers\Admin\StoryController::class, 'store']);
     Route::post('/admin/questions', [\App\Http\Controllers\Admin\QuestionController::class, 'store']);
+
+    Route::get('/map', [\App\Http\Controllers\MapController::class, 'index']);
+    Route::get('/stories/{story}', [\App\Http\Controllers\StoryViewController::class, 'show']);
+    Route::post('/watch-pings', [\App\Http\Controllers\WatchPingController::class, 'store']);
 });
 Route::middleware(['auth'])->get('/admin/users', fn () => abort(403));
 
