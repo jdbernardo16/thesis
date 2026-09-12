@@ -1,9 +1,12 @@
 <script setup>
+import { computed } from 'vue';
 import { Link } from '@inertiajs/vue3';
 
-defineProps({
+const props = defineProps({
   stage: { type: Object, required: true },
 });
+
+const stars = computed(() => Math.min(3, Math.max(0, props.stage.bestStars ?? 0)));
 </script>
 
 <template>
@@ -32,14 +35,14 @@ defineProps({
       <p class="truncate text-sm font-medium text-gray-900">{{ stage.title }}</p>
       <p class="text-xs text-gray-500">
         <span v-if="stage.state === 'locked'">Locked — clear previous stage first</span>
-        <span v-else-if="stage.state === 'cleared'">Cleared — {{ stage.bestStars }} ★</span>
+        <span v-else-if="stage.state === 'cleared'">Cleared — {{ stars }} ★</span>
         <span v-else>Ready to play</span>
       </p>
     </div>
 
     <div class="flex shrink-0 items-center gap-2">
-      <span v-if="stage.bestStars > 0" class="text-xs font-semibold text-amber-600">
-        {{ '★'.repeat(stage.bestStars) }}{{ '☆'.repeat(3 - stage.bestStars) }}
+      <span v-if="stars > 0" class="text-xs font-semibold text-amber-600">
+        {{ '★'.repeat(stars) }}{{ '☆'.repeat(3 - stars) }}
       </span>
       <Link
         v-if="stage.unlocked && stage.story_id"

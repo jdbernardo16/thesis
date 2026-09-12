@@ -150,11 +150,19 @@ function setFont(s) {
 
           <div class="mt-6 flex items-center gap-3 border-t border-gray-100 pt-4">
             <span class="text-sm text-gray-500">{{ questionCount }} questions</span>
-            <button
-              :disabled="!quizEnabled"
-              class="ml-auto rounded bg-gray-900 px-4 py-2 text-sm text-white disabled:cursor-not-allowed disabled:bg-gray-300"
+            <Link
+              v-if="quizEnabled"
+              :href="`/quiz/${story.id}`"
+              class="ml-auto rounded bg-gray-900 px-4 py-2 text-sm text-white"
             >
-              {{ quizEnabled ? 'Start Quiz' : `Watch ${story.must_watch_pct ?? 80}% or finish transcript to unlock quiz` }}
+              Start Quiz
+            </Link>
+            <button
+              v-else
+              disabled
+              class="ml-auto cursor-not-allowed rounded bg-gray-300 px-4 py-2 text-sm text-white"
+            >
+              {{ `Watch ${story.must_watch_pct ?? 80}% or finish transcript to unlock quiz` }}
             </button>
           </div>
           <p v-if="!quizEnabled" class="mt-1 text-right text-xs text-gray-400">

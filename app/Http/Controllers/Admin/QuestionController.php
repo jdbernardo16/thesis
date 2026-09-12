@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Question;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class QuestionController extends Controller
 {
@@ -14,7 +15,10 @@ class QuestionController extends Controller
 
         $d = $r->validate([
             'story_id' => 'required|exists:stories,id',
-            'order' => 'required|integer|min:1',
+            'order' => [
+                'required', 'integer', 'min:1',
+                Rule::unique('questions', 'order')->where(fn ($q) => $q->where('story_id', $r->input('story_id'))),
+            ],
             'type' => 'required|in:mc_single,true_false,ordering,fill_blank,mcq',
             'stem' => 'required|string',
             'payload' => 'required|array',

@@ -40,6 +40,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/map', [\App\Http\Controllers\MapController::class, 'index']);
     Route::get('/stories/{story}', [\App\Http\Controllers\StoryViewController::class, 'show']);
     Route::post('/watch-pings', [\App\Http\Controllers\WatchPingController::class, 'store']);
+
+    Route::post('/stages/{stage}/attempts', [\App\Http\Controllers\AttemptController::class, 'store']);
+    Route::get('/quiz/{story}', [\App\Http\Controllers\QuizController::class, 'show']);
+    Route::get('/result/{attempt}', [\App\Http\Controllers\AttemptController::class, 'show']);
 });
 Route::middleware(['auth'])->get('/admin/users', fn () => abort(403));
 

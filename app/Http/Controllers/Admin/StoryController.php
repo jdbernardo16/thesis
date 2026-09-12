@@ -25,9 +25,9 @@ class StoryController extends Controller
             'stage_id' => 'required|exists:stages,id|unique:stories,stage_id',
             'type' => 'required|in:text,youtube',
             'title' => 'required|string|max:255',
-            'body_html' => 'nullable|string',
+            'body_html' => 'required_if:type,text|nullable|string',
             'cover_path' => 'nullable|string|max:255',
-            'youtube_url' => 'nullable|string|max:500',
+            'youtube_url' => 'required_if:type,youtube|nullable|string|max:500',
             'youtube_video_id' => 'nullable|string|size:11',
             'transcript' => 'nullable|string',
             'must_watch_pct' => 'nullable|integer|min:1|max:100',
@@ -36,6 +36,10 @@ class StoryController extends Controller
         $videoId = $d['youtube_video_id'] ?? null;
         if (! $videoId && ! empty($d['youtube_url'])) {
             $videoId = self::toVideoId($d['youtube_url']);
+        }
+
+        if ($d['type'] === 'youtube' && ! $videoId) {
+            abort(422, 'Could not parse a YouTube video ID from the URL.');
         }
 
         $story = Story::create([

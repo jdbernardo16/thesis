@@ -120,7 +120,11 @@ class RosterImportController extends Controller
             }
 
             if ($header === null) {
-                $normalized = array_map(fn ($h) => strtolower(trim((string) $h)), $data);
+                // Strip UTF-8 BOM so Excel-saved CSVs parse the first header.
+                $normalized = array_map(
+                    fn ($h) => strtolower(trim(ltrim((string) $h, "\u{FEFF}"))),
+                    $data
+                );
                 // Detect header row
                 if (in_array('display_name', $normalized)) {
                     $header = $normalized;

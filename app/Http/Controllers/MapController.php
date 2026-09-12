@@ -11,9 +11,17 @@ class MapController extends Controller
     public function index()
     {
         $user = request()->user();
+        $studentOnly = $user && $user->role === 'student';
 
         $levels = Level::orderBy('order')
-            ->with(['stages' => fn ($q) => $q->orderBy('order')->with('story:id,stage_id')])
+            ->when($studentOnly, fn ($q) => $q->where('is_published', true))
+            ->with(['stages' => function ($q) use ($studentOnly) {
+                $q->orderBy('order');
+                if ($studentOnly) {
+                    $q->where('is_published', true);
+                }
+                $q->with('story:id,stage_id');
+            }])
             ->get();
 
         $payload = $levels->map(function ($level) use ($user) {

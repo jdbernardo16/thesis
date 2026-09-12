@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Stage;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class StageController extends Controller
 {
@@ -15,7 +16,10 @@ class StageController extends Controller
         $d = $r->validate([
             'level_id' => 'required|exists:levels,id',
             'title' => 'required|string|max:255',
-            'order' => 'required|integer|min:1',
+            'order' => [
+                'required', 'integer', 'min:1',
+                Rule::unique('stages', 'order')->where(fn ($q) => $q->where('level_id', $r->input('level_id'))),
+            ],
             'required_stars_to_unlock' => 'nullable|integer|min:0',
             'is_pretest' => 'nullable|boolean',
             'is_posttest' => 'nullable|boolean',
