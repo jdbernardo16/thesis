@@ -53,7 +53,7 @@ Hierarchy is strict and linear within a Level for MVP (no branching).
 
 **Level:** id, title (e.g. "Level 1: Pagsisimula"), description, order (int unique), cover_image, `required_total_stars_to_unlock` (int, for next level gate; Level 1 = 0), `badge_name`, is_published bool. Example: L1 has 5 stages, max 15 stars, requires 8 stars to open L2.
 
-**Stage:** id, level_id, order within level, title, `required_stars_to_unlock` (default 1 — means previous stage must have ≥1 star; admin can set higher), story_id (one-to-one for MVP), `is_pretest` bool, `is_posttest` bool, `difficulty_tag` enum (`frustration|instructional|independent`), `readability_note` (free text, e.g. Phil-IRI level), estimated_minutes, is_published bool.
+**Stage:** id, level_id, title, order within level, `required_stars_to_unlock` (default 1 — means previous stage must have ≥1 star; admin can set higher), `is_pretest` bool, `is_posttest` bool, `difficulty_tag` enum (`frustration|instructional|independent`), `readability_note` (free text, e.g. Phil-IRI level), estimated_minutes, is_published bool. Story is linked via `stories.stage_id` (one-to-one, canonical side).
 
 **Story:** id, stage_id, type enum (`text|youtube`), title, cover_image nullable, body_richtext (for text; sanitized HTML, supports headings, images), `youtube_url` (for youtube; must match allowlist `youtube.com|youtu.be`, stored as video_id), transcript/summary (required for youtube — ensures reading still present + fallback if video blocked), `must_watch_pct` default 80.
 
