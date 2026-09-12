@@ -29,6 +29,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/teacher/classes', [\App\Http\Controllers\ClassController::class, 'store']);
     Route::get('/teacher/classes/{class}', [\App\Http\Controllers\ClassController::class, 'show']);
     Route::post('/teacher/classes/{class}/roster-import', [\App\Http\Controllers\RosterImportController::class, 'store']);
+
+    Route::post('/admin/levels', [\App\Http\Controllers\Admin\LevelController::class, 'store']);
+    Route::post('/admin/levels/{level}/publish', [\App\Http\Controllers\Admin\LevelController::class, 'publish']);
+    Route::post('/admin/stages', [\App\Http\Controllers\Admin\StageController::class, 'store']);
+    Route::post('/admin/stages/{stage}/publish', [\App\Http\Controllers\Admin\StageController::class, 'publish']);
+    Route::post('/admin/stories', [\App\Http\Controllers\Admin\StoryController::class, 'store']);
+    Route::post('/admin/questions', [\App\Http\Controllers\Admin\QuestionController::class, 'store']);
 });
 Route::middleware(['auth'])->get('/admin/users', fn () => abort(403));
 
