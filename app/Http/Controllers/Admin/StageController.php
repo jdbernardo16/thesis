@@ -49,6 +49,14 @@ class StageController extends Controller
 
         $stage->update(['is_published' => true]);
 
+        \App\Models\AuditLog::create([
+            'user_id' => $r->user()?->id,
+            'action' => 'stage.publish',
+            'auditable_type' => Stage::class,
+            'auditable_id' => $stage->id,
+            'details' => ['level_id' => $stage->level_id, 'title' => $stage->title],
+        ]);
+
         return response()->json($stage->fresh());
     }
 }

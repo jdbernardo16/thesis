@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ClassRoom;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
-use Inertia\Inertia;
 
 class ClassController extends Controller
 {
@@ -38,16 +36,8 @@ class ClassController extends Controller
 
     public function show(Request $request, ClassRoom $class)
     {
-        Gate::authorize('view', $class);
-
-        $class->load('students');
-
-        if (class_exists(Inertia::class)) {
-            return Inertia::render('Teacher/ClassShow', [
-                'class' => $class,
-            ]);
-        }
-
-        return redirect()->back()->with('roster', $class->students);
+        // Legacy entrypoint kept for BC — delegate to the richer
+        // TeacherDashboardController@show (roster + star matrix).
+        return app(TeacherDashboardController::class)->show($request, $class);
     }
 }

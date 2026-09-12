@@ -36,6 +36,14 @@ class ResetLinkController extends Controller
             'updated_at' => now(),
         ]);
 
+        \App\Models\AuditLog::create([
+            'user_id' => $teacher->id,
+            'action' => 'reset-link.create',
+            'auditable_type' => User::class,
+            'auditable_id' => $student->id,
+            'details' => ['student_id' => $student->id],
+        ]);
+
         return back()->with('reset_raw', $raw);
     }
 }

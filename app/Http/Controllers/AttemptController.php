@@ -193,6 +193,18 @@ class AttemptController extends Controller
             ->groupBy('stage_id')
             ->pluck('m', 'stage_id');
 
+        // Forward-only current_level_id: replaying an earlier level must not
+        // regress the stored pointer (Task 6 review). Compare Level order.
+        $existing = StudentProgress::find($studentId);
+        $resolvedLevelId = $levelId;
+        if ($existing && $existing->current_level_id) {
+            $currentOrder = \App\Models\Level::where('id', $existing->current_level_id)->value('order');
+            $newOrder = \App\Models\Level::where('id', $levelId)->value('order');
+            if ($currentOrder !== null && $newOrder !== null && $currentOrder > $newOrder) {
+                $resolvedLevelId = (int) $existing->current_level_id;
+            }
+        }
+
         StudentProgress::updateOrCreate(
             ['student_id' => $studentId],
             [
@@ -200,7 +212,7 @@ class AttemptController extends Controller
                 'total_exp' => (int) Attempt::where('student_id', $studentId)->sum('exp_earned'),
                 'stages_cleared' => (int) $bestPerStage->filter(fn ($m) => $m >= 1)->count(),
                 'stages_perfect' => (int) $bestPerStage->filter(fn ($m) => $m >= 3)->count(),
-                'current_level_id' => $levelId,
+                'current_level_id' => $resolvedLevelId,
                 'last_active_at' => now(),
             ]
         );

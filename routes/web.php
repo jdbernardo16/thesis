@@ -27,9 +27,13 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::post('/teacher/students/{student}/reset-link', [\App\Http\Controllers\ResetLinkController::class, 'store']);
     Route::post('/teacher/classes', [\App\Http\Controllers\ClassController::class, 'store']);
-    Route::get('/teacher/classes/{class}', [\App\Http\Controllers\ClassController::class, 'show']);
+    Route::get('/teacher/dashboard', [\App\Http\Controllers\TeacherDashboardController::class, 'index']);
+    Route::get('/teacher/classes/{class}', [\App\Http\Controllers\TeacherDashboardController::class, 'show']);
     Route::post('/teacher/classes/{class}/roster-import', [\App\Http\Controllers\RosterImportController::class, 'store']);
 
+    Route::get('/classes/{class}/leaderboard', [\App\Http\Controllers\LeaderboardController::class, 'show']);
+
+    Route::get('/admin/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index']);
     Route::post('/admin/levels', [\App\Http\Controllers\Admin\LevelController::class, 'store']);
     Route::post('/admin/levels/{level}/publish', [\App\Http\Controllers\Admin\LevelController::class, 'publish']);
     Route::post('/admin/stages', [\App\Http\Controllers\Admin\StageController::class, 'store']);
