@@ -20,7 +20,12 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'username',
         'password',
+        'role',
+        'must_change_password',
+        'avatar_color',
+        'active',
     ];
 
     /**
@@ -43,6 +48,18 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'must_change_password' => 'boolean',
+            'active' => 'boolean',
         ];
+    }
+
+    public function isRole(string $r): bool
+    {
+        return $this->role === $r;
+    }
+
+    public function taughtClasses()
+    {
+        return $this->hasMany(ClassRoom::class, 'teacher_id');
     }
 }
